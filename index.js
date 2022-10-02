@@ -40,7 +40,7 @@ let lessons = [
 let nextHubId = 3;
 
 server.get("/api/hubs", (req, res) => {
-  res.json(hubs);
+  res.status(200).res.json(hubs);
 });
 
 server.post("/api/hubs", (req, res) => {
@@ -49,7 +49,7 @@ server.post("/api/hubs", (req, res) => {
   newHub.id = shortid.generate();
   hubs.push(newHub);
 
-  res.json(newHub);
+  res.status(200).res.json(newHub);
 });
 
 server.delete("/api/hubs/:id", (req, res) => {
@@ -58,7 +58,27 @@ server.delete("/api/hubs/:id", (req, res) => {
 
   hubs = hubs.filter((x) => x.id != id);
 
-  res.json(deleted);
+  res.status(200).res.json(deleted);
+});
+
+server.put("/api/hubs/:id", (req, res) => {
+  const id = req.params.id;
+  const changes = req.body;
+
+  let found = hubs.find((h) => h.id === id);
+
+  if (found) {
+    //if not -1 found
+    Object.assign(found, changes);
+  } else {
+    //did not find a hub with that id
+    //404
+    res.status(404).json({
+      message: "Hub not found",
+    });
+  }
+
+  res.json(found);
 });
 
 const PORT = 8000; // we visit http://localhost:8000/ to see the api
