@@ -52,6 +52,15 @@ server.post("/api/hubs", (req, res) => {
   res.json(newHub);
 });
 
+server.delete("/api/hubs/:id", (req, res) => {
+  const id = req.params.id;
+  const deleted = hubs.find((h) => h.id === id);
+
+  hubs = hubs.filter((x) => x.id != id);
+
+  res.json(deleted);
+});
+
 const PORT = 8000; // we visit http://localhost:8000/ to see the api
 server.listen(PORT, () =>
   console.log(`Hello minetito hermosho, server is running ${PORT}`)
